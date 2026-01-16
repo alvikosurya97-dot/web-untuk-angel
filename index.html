@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photobooth</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>📸 Photobooth</h1>
+    
+    <!-- Kamera -->
+    <video id="camera" autoplay></video>
+    
+    <!-- Tombol -->
+    <div class="controls">
+      <button id="capture">Ambil Foto</button>
+    </div>
+    
+    <!-- Galeri -->
+    <div class="gallery" id="gallery"></div>
+  </div>
+
+  <script>
+    const video = document.getElementById('camera');
+    const captureBtn = document.getElementById('capture');
+    const gallery = document.getElementById('gallery');
+
+    // Aktifkan kamera
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+      })
+      .catch(err => {
+        alert("Kamera tidak bisa diakses: " + err);
+      });
+
+    // Ambil foto
+    captureBtn.addEventListener('click', () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const img = document.createElement('img');
+      img.src = canvas.toDataURL('image/png');
+      gallery.appendChild(img);
+    });
+  </script>
+</body>
+</html>
